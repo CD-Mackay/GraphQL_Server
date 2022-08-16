@@ -1,4 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
+const fs = require("fs");
+const path = require("path");
 
 // Hardcoded Sample data
 let links = [
@@ -9,34 +11,28 @@ let links = [
   },
 ];
 
-const typeDefs = gql`
-  type Query {
-    info: String!
-    feed: [Link!]!
-  }
-
-  type Link {
-    type: ID!
-    description: String!
-    url: String!
-  }
-`;
-
 const resolvers = {
   Query: {
-    hello: () => "world",
+    info: () => "world",
     feed: () => links,
   },
+  Mutation: {
+    post: (parent, args) => {
+      let idCount = links.length;
 
-  Link: {
-    id: (parent) => parent.id,
-    description: (parent) => parent.description,
-    url: (parent) => parent.url,
+      const link = {
+        id: `link-${idCount++}`,
+        description: args.description,
+        url: args.url,
+      };
+      links.push(link);
+      return link;
+    },
   },
 };
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf8"),
   resolvers,
 });
 
