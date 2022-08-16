@@ -28,6 +28,17 @@ const resolvers = {
       links.push(link);
       return link;
     },
+    updateLink: (parent, args) => {
+      let id = args.id;
+
+      const link = {
+        id: `link-${id}`,
+        description: args.description,
+        url: args.url
+      }
+      links.push(link);
+      return link;
+    }
   },
 };
 
