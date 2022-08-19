@@ -30,14 +30,13 @@ const resolvers = {
     },
     updateLink: (parent, args) => {
       let id = args.id;
-
-      const link = {
-        id: `link-${id}`,
-        description: args.description,
-        url: args.url
+      for (let element in links) {
+        if (element.id === id) {
+          element.description = args.description,
+          element.url = args.url
+          return element;
+        }
       }
-      links.push(link);
-      return link;
     }
   },
 };
